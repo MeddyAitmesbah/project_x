@@ -1,0 +1,128 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Movement : MonoBehaviour
+{
+
+    public PlayerMvmnt controller;
+    public Rigidbody2D rb;
+    public Vector2 V;
+    public Vector2 Vdown;
+    public Vector2 VLeft;
+    bool moveDown = false;
+    bool moveUp = false;
+    bool moveleft = false;
+    bool moveright = false;
+    bool goingright = false;
+    bool goingleft = false;
+    bool goingDown = false;
+    bool goingUp = false;
+    // Use this for initialization
+    void Start()
+    {
+        goingright = true;
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.tag == "RightPlateforme" || collision.collider.tag == "MiddlePlateforme" )
+        {
+            rb.AddForce(V, 0);
+        }
+        if (collision.collider.tag == "LeftPlateforme")
+        {
+            goingDown = false;
+            if (V.x > 0)
+            {
+                rb.AddForce(VLeft, 0);
+                V.y = VLeft.y;
+            }
+            else
+                rb.AddForce(V, 0);
+        }
+        if (collision.collider.tag == "TopPlateforme")
+        {
+            rb.AddForce(Vdown, 0);
+            V.y = Vdown.y;
+            goingDown = true;
+        }
+
+
+    }
+    /*
+    public Vector2 aPosition1 = new Vector2(-0.05f, 8f);*/
+
+    void Update()
+    {
+       
+        if (goingright)
+        {
+            if (Input.GetKeyDown("a"))
+            {
+                goingright = false;
+                moveright = true;
+                goingleft = true;
+                goingDown = true;
+            } 
+            
+        }
+        if (goingleft)
+        {
+            if (Input.GetKeyDown("d"))
+            {
+                moveleft = true;
+                goingleft = false;
+                goingright = true;
+                goingDown = true;
+            }
+
+        }
+        if (goingDown)
+        {
+            if (Input.GetKeyDown("s"))
+            {
+                moveDown = true;
+                goingright = true;
+                goingleft = true;
+                goingDown = false;
+            }
+        }
+
+
+        if (moveright)
+        {
+            V.x = 600f;
+            Vdown.x = V.x;
+            V.y = V.y +350f;
+            moveright = false;
+        }
+        
+        if (moveleft)
+        {
+            V.x = -1f * V.x;
+            Vdown.x = V.x;
+            V.y = V.y - 350f;
+            moveleft = false;
+        }
+        if (moveDown)
+        {
+            if (V.x < 0)
+            {
+                //V.x = 1f * V.x;
+                V.y = V.y - 350f;
+                moveDown = false;
+            }
+            else
+            {
+                V.y = V.y - 350f;
+                V.x = -1f * V.x;
+                moveDown = false;
+            }
+            
+        }
+        if (moveUp)
+        {
+
+        }
+    }
+}
